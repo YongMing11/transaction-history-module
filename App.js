@@ -1,20 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import TransactionHistoryScreen from "./src/transaction/components/TransactionHistoryScreen";
+import { TransactionController } from "./src/transaction/interfaceAdapters/controllers/TransactionController";
+import { GetTransactionsUseCaseImpl } from "./src/transaction/useCases/GetTransactions";
+import { ReactNativePaperTransactionPresenter } from "./src/transaction/interfaceAdapters/presenters/TransactionPresenter";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function App() {
+const Stack = createStackNavigator();
+const transactionController = new TransactionController(
+  new GetTransactionsUseCaseImpl(),
+  new ReactNativePaperTransactionPresenter()
+);
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="TransactionHistory">
+          <Stack.Screen
+            name="TransactionHistory"
+            options={{ title: "Transaction History" }}
+          >
+            {(props) => (
+              <TransactionHistoryScreen
+                {...props}
+                transactionController={transactionController}
+              />
+            )}
+          </Stack.Screen>
+          {/* Add other screens if needed */}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
