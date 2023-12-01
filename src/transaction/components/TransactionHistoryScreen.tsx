@@ -3,7 +3,7 @@ import { ListRenderItem, View } from "react-native";
 import { TransactionController } from "../interfaceAdapters/controllers/TransactionController";
 import { List, Divider, Title } from "react-native-paper";
 import { Transaction } from "../entities/Transaction";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, RefreshControl } from "react-native-gesture-handler";
 
 interface Props {
   transactionController: TransactionController;
@@ -13,19 +13,26 @@ const TransactionHistoryScreen: React.FC<Props> = ({
   transactionController,
 }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchTransactions = async () => {
+    try {
+      // Fetch transactions using the controller
+      await transactionController.getTransactions();
+      setTransactions(transactionController.getPresentedTransactions());
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchTransactions();
+    setRefreshing(false);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch transactions using the controller
-        await transactionController.getTransactions();
-        setTransactions(transactionController.getPresentedTransactions());
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-      }
-    };
-
-    fetchData();
+    fetchTransactions();
   }, [transactionController]);
 
   const renderItem: ListRenderItem<Transaction> = ({ item }: { item: Transaction }) => (
@@ -57,9 +64,9 @@ const TransactionHistoryScreen: React.FC<Props> = ({
           data={transactions}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          // refreshControl={
-          //   <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} colors={[theme.colors.primary]} />
-          // }
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
           // onEndReachedThreshold={0.1} // Trigger onEndReached when 10% from the end
           // onEndReached={onEndReached}
         />
