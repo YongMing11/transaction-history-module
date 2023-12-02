@@ -7,6 +7,7 @@ import { GetTransactionsUseCaseImpl } from "./src/transaction/useCases/GetTransa
 import { ReactNativePaperTransactionPresenter } from "./src/transaction/interfaceAdapters/presenters/TransactionPresenter";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TransactionDetailScreen from "./src/transaction/components/TransactionDetailScreen";
+import LoginScreen from "./src/authentication/components/LoginScreen";
 
 const Stack = createStackNavigator();
 const transactionController = new TransactionController(
@@ -18,7 +19,12 @@ const App = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="TransactionHistory">
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen
+            name="Login"
+            options={{ headerShown: false }}
+            component={LoginScreen}
+          />
           <Stack.Screen
             name="TransactionHistory"
             options={{ title: "Transaction History" }}

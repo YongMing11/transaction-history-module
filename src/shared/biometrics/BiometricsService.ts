@@ -10,17 +10,19 @@ const askForBiometrics = async () =>
     cancelLabel: "Not now",
   });
 
-export const enableBiometrics = async () => {
+export const enableBiometrics = async (): Promise<boolean> => {
   const biometricsResult = await askForBiometrics();
   if (biometricsResult?.success) {
-    const keys = await RSA.generateKeys(1024);
-    await SecureStore.setItemAsync("USER_BIOMETRIC_KEY", keys.private);
+    // const keys = await RSA.generateKeys(1024);
+    // await SecureStore.setItemAsync("USER_BIOMETRIC_KEY", keys.private);
     // await postBiometricKey({
     //     biometricKey: {
     //         publicKey: keys.public
     //     }
     // });
   }
+
+  return biometricsResult?.success || false;
 };
 
 export const authenticate = async (): Promise<boolean> => {
