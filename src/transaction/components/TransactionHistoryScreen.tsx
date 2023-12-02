@@ -16,7 +16,7 @@ const TransactionHistoryScreen: React.FC<Props> = ({
 }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [amountVisible, setAmountVisible] = useState(true);
+  const [amountVisible, setAmountVisible] = useState(false);
 
   const fetchTransactions = async () => {
     try {
@@ -98,14 +98,14 @@ const TransactionHistoryScreen: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF", // Set background color to white
+    backgroundColor: "#FFFFFF", 
   },
   subheader: {
-    color: "#3498db", // Set subheader color to SEA Money company color
+    color: "#3498db",
   },
   transactionItem: {
     borderBottomWidth: 0.5,
-    borderBottomColor: "#ecf0f1", // Set border color to a light shade
+    borderBottomColor: "#ecf0f1",
   },
   transactionAmount: {
     fontSize: 18,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    backgroundColor: "#e74c3c", // Set FAB background color to a red shade
+    backgroundColor: "#e74c3c", 
   },
 });
 
