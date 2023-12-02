@@ -6,6 +6,7 @@ import { TransactionController } from "./src/transaction/interfaceAdapters/contr
 import { GetTransactionsUseCaseImpl } from "./src/transaction/useCases/GetTransactions";
 import { ReactNativePaperTransactionPresenter } from "./src/transaction/interfaceAdapters/presenters/TransactionPresenter";
 import { SafeAreaView } from "react-native-safe-area-context";
+import TransactionDetailScreen from "./src/transaction/components/TransactionDetailScreen";
 
 const Stack = createStackNavigator();
 const transactionController = new TransactionController(
@@ -29,7 +30,11 @@ const App = () => {
               />
             )}
           </Stack.Screen>
-          {/* Add other screens if needed */}
+          <Stack.Screen
+            name="TransactionDetail"
+            options={{ title: "Transaction Detail" }}
+            component={TransactionDetailScreen}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

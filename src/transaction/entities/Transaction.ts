@@ -4,4 +4,5 @@ export interface Transaction {
   date: string;
   description: string;
   type: "debit" | "credit";
+  merchant: string;
 }

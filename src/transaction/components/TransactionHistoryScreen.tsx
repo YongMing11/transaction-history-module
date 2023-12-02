@@ -5,7 +5,9 @@ import { List, Divider, Title, FAB } from "react-native-paper";
 import { Transaction } from "../entities/Transaction";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { authenticate, enableBiometrics } from "../../shared/biometrics/BiometricsService";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../shared/navigation/NavigationTypes";
 
 interface Props {
   transactionController: TransactionController;
@@ -17,6 +19,7 @@ const TransactionHistoryScreen: React.FC<Props> = ({
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [amountVisible, setAmountVisible] = useState(false);
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const fetchTransactions = async () => {
     try {
@@ -45,6 +48,10 @@ const TransactionHistoryScreen: React.FC<Props> = ({
     }
   };
 
+  const navigateToDetailScreen = (transaction: Transaction) => {
+    navigation.navigate("TransactionDetail", { transaction });
+  };
+
   useEffect(() => {
     fetchTransactions();
   }, [transactionController, amountVisible]);
@@ -67,6 +74,7 @@ const TransactionHistoryScreen: React.FC<Props> = ({
         </Title>
       )}
       style={styles.transactionItem}
+      onPress={() => navigateToDetailScreen(item)}
     />
   );
 
