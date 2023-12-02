@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ListRenderItem, View } from "react-native";
+import { ListRenderItem, View, StyleSheet } from "react-native";
 import { TransactionController } from "../interfaceAdapters/controllers/TransactionController";
-import { List, Divider, Title } from "react-native-paper";
+import { List, Divider, Title, FAB } from "react-native-paper";
 import { Transaction } from "../entities/Transaction";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
+import { authenticate, enableBiometrics } from "../../shared/biometrics/BiometricsService";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 interface Props {
   transactionController: TransactionController;
@@ -14,10 +16,10 @@ const TransactionHistoryScreen: React.FC<Props> = ({
 }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [amountVisible, setAmountVisible] = useState(true);
 
   const fetchTransactions = async () => {
     try {
-      // Fetch transactions using the controller
       await transactionController.getTransactions();
       setTransactions(transactionController.getPresentedTransactions());
     } catch (error) {
@@ -31,14 +33,25 @@ const TransactionHistoryScreen: React.FC<Props> = ({
     setRefreshing(false);
   };
 
+  const toggleAmountVisibility = async () => {
+    try {
+      const isAuthenticated = await authenticate();
+      if (isAuthenticated) {
+        console.log("Authenticated");
+        setAmountVisible(!amountVisible);
+      }
+    } catch (error) {
+      console.error("Error during authentication:", error);
+    }
+  };
+
   useEffect(() => {
     fetchTransactions();
-  }, [transactionController]);
+  }, [transactionController, amountVisible]);
 
   const renderItem: ListRenderItem<Transaction> = ({ item }: { item: Transaction }) => (
     <List.Item
       key={item.id}
-      // format the date from ISO 8601 into DD Feb YYYY, XX:XXAM/PM
       title={new Date(item.date).toLocaleString("en-GB", {
         day: "numeric",
         month: "short",
@@ -48,18 +61,20 @@ const TransactionHistoryScreen: React.FC<Props> = ({
         hour12: true,
       })}
       description={item.description}
-      right={() => <Title>{item.type=="credit"?"+RM ":"-RM "}{item.amount}</Title>}
-      style={{ borderBottomWidth: 0.5, borderBottomColor: "lightgrey" }}
-      />
+      right={() => (
+        <Title style={[styles.transactionAmount, item.type === "credit" ? styles.creditAmount : styles.debitAmount]}>
+          {amountVisible ? (item.type === "credit" ? `+RM ` : `-RM `)+item.amount : '*****'}
+        </Title>
+      )}
+      style={styles.transactionItem}
+    />
   );
 
   const keyExtractor = (item: Transaction) => item.id.toString();
 
   return (
-    <View>
+    <View style={styles.container}>
       <List.Section>
-        <List.Subheader>Recent Transactions</List.Subheader>
-        <Divider />
         <FlatList
           data={transactions}
           renderItem={renderItem}
@@ -67,12 +82,47 @@ const TransactionHistoryScreen: React.FC<Props> = ({
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
-          // onEndReachedThreshold={0.1} // Trigger onEndReached when 10% from the end
-          // onEndReached={onEndReached}
         />
       </List.Section>
+
+      {/* Toggle Visibility Button */}
+      <FAB
+        style={styles.fab}
+        icon={amountVisible ? "eye-off" : "eye"}
+        onPress={toggleAmountVisibility}
+      />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#FFFFFF", // Set background color to white
+  },
+  subheader: {
+    color: "#3498db", // Set subheader color to SEA Money company color
+  },
+  transactionItem: {
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#ecf0f1", // Set border color to a light shade
+  },
+  transactionAmount: {
+    fontSize: 18,
+  },
+  creditAmount: {
+    color: "#2ecc71", // Set credit transaction amount color to green
+  },
+  debitAmount: {
+    color: "#e74c3c", // Set debit transaction amount color to red
+  },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "#e74c3c", // Set FAB background color to a red shade
+  },
+});
 
 export default TransactionHistoryScreen;

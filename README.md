@@ -15,3 +15,4 @@ References
 1. Clean Architecture (https://medium.com/@ganeshraj020794/clean-architecture-in-react-native-38025e2d7223, https://www.linkedin.com/pulse/simple-understanding-clean-architecture-react-native-john-jackson/)
 2. Responsive UI (https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes)
 3. UI Library (https://reactnativepaper.com/)
+4. Biometric (https://dev.to/allanloji/setting-up-biometric-login-on-your-react-native-app-4903)
