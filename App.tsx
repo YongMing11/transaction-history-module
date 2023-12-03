@@ -8,9 +8,9 @@ import { ReactNativePaperTransactionPresenter } from "./src/transaction/interfac
 import { SafeAreaView } from "react-native-safe-area-context";
 import TransactionDetailScreen from "./src/transaction/components/TransactionDetailScreen";
 import LoginScreen from "./src/authentication/components/LoginScreen";
-// import ErrorBoundary from './path-to-ErrorBoundary/ErrorBoundary'; // Adjust the path
 import * as Sentry from "@sentry/react-native";
 import { TransactionProvider } from "./src/transaction/context/TransactionContext";
+import ErrorBoundary from "./src/shared/errorBoundary/ErrorBoundary";
 
 // Initialize Sentry
 Sentry.init({
@@ -22,7 +22,7 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* <ErrorBoundary> */}
+      <ErrorBoundary>
       <TransactionProvider>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Login">
@@ -44,7 +44,7 @@ const App = () => {
           </Stack.Navigator>
         </NavigationContainer>
       </TransactionProvider>
-      {/* </ErrorBoundary> */}
+      </ErrorBoundary>
     </SafeAreaView>
   );
 };

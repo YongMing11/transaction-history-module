@@ -38,8 +38,8 @@ const LoginScreen = () => {
       <Text style={styles.title}>Secure Login</Text>
       {!biometricsEnabled ? (
         <TouchableOpacity
-          style={styles.enableButton}
-          onPress={handleEnableBiometrics}
+        style={styles.enableButton}
+        onPress={handleEnableBiometrics}
         >
           <Text style={styles.enableButtonText}>Enable Biometrics</Text>
         </TouchableOpacity>
@@ -48,6 +48,7 @@ const LoginScreen = () => {
           <Text style={styles.loginButtonText}>Login with Biometrics</Text>
         </TouchableOpacity>
       )}
+      <Text style={styles.traditionalLoginText}>Use password to login</Text>
     </View>
   );
 };
@@ -86,6 +87,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  traditionalLoginText: {
+    marginTop: 10,
+    color: "#3498db",
+    fontSize: 14,
   },
 });
 
