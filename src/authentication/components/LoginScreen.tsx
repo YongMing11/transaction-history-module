@@ -10,6 +10,9 @@ import { RootStackParamList } from "../../shared/navigation/NavigationTypes";
 
 const LoginScreen = () => {
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
+  const [authenticationError, setAuthenticationError] = useState<string | null>(
+    null
+  );
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const handleEnableBiometrics = async () => {
@@ -18,13 +21,20 @@ const LoginScreen = () => {
   };
 
   const handleLogin = async () => {
-    const success = await authenticate();
-    if (success) {
-      // Navigate to the main app screen
-      navigation.replace("TransactionHistory");
-    } else {
-      // Biometric authentication failed
-      alert("Biometric authentication failed");
+    try {
+      const success = await authenticate();
+
+      if (success) {
+        // Navigate to the main app screen
+        navigation.replace("TransactionHistory");
+      } else {
+        // Biometric authentication failed
+        setAuthenticationError("Biometric authentication failed");
+      }
+    } catch (error) {
+      // Handle other authentication errors
+      console.error("Authentication error:", error);
+      setAuthenticationError("Authentication error occurred");
     }
   };
 
@@ -36,10 +46,13 @@ const LoginScreen = () => {
         resizeMode="contain"
       />
       <Text style={styles.title}>Secure Login</Text>
+      {authenticationError && (
+        <Text style={styles.errorText}>{authenticationError}</Text>
+      )}
       {!biometricsEnabled ? (
         <TouchableOpacity
-        style={styles.enableButton}
-        onPress={handleEnableBiometrics}
+          style={styles.enableButton}
+          onPress={handleEnableBiometrics}
         >
           <Text style={styles.enableButtonText}>Enable Biometrics</Text>
         </TouchableOpacity>
@@ -92,6 +105,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: "#3498db",
     fontSize: 14,
+  },
+  errorText: {
+    color: "#e74c3c",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });
 
