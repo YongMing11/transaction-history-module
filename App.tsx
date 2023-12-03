@@ -8,41 +8,43 @@ import { ReactNativePaperTransactionPresenter } from "./src/transaction/interfac
 import { SafeAreaView } from "react-native-safe-area-context";
 import TransactionDetailScreen from "./src/transaction/components/TransactionDetailScreen";
 import LoginScreen from "./src/authentication/components/LoginScreen";
+// import ErrorBoundary from './path-to-ErrorBoundary/ErrorBoundary'; // Adjust the path
+import * as Sentry from "@sentry/react-native";
+import { TransactionProvider } from "./src/transaction/context/TransactionContext";
+
+// Initialize Sentry
+Sentry.init({
+  dsn: "https://9da6d1893e4d9a2bbf0857df5c3996ac@o4506330453835776.ingest.sentry.io/4506330456326144",
+});
 
 const Stack = createStackNavigator();
-const transactionController = new TransactionController(
-  new GetTransactionsUseCaseImpl(),
-  new ReactNativePaperTransactionPresenter()
-);
 
 const App = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
-          <Stack.Screen
-            name="Login"
-            options={{ headerShown: false }}
-            component={LoginScreen}
-          />
-          <Stack.Screen
-            name="TransactionHistory"
-            options={{ title: "Transaction History" }}
-          >
-            {(props) => (
-              <TransactionHistoryScreen
-                {...props}
-                transactionController={transactionController}
-              />
-            )}
-          </Stack.Screen>
-          <Stack.Screen
-            name="TransactionDetail"
-            options={{ title: "Transaction Detail" }}
-            component={TransactionDetailScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      {/* <ErrorBoundary> */}
+      <TransactionProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen
+              name="Login"
+              options={{ headerShown: false }}
+              component={LoginScreen}
+            />
+            <Stack.Screen
+              name="TransactionHistory"
+              options={{ title: "Transaction History" }}
+              component={TransactionHistoryScreen}
+            />
+            <Stack.Screen
+              name="TransactionDetail"
+              options={{ title: "Transaction Detail" }}
+              component={TransactionDetailScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </TransactionProvider>
+      {/* </ErrorBoundary> */}
     </SafeAreaView>
   );
 };

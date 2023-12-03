@@ -5,9 +5,6 @@ import {
   enableBiometrics,
 } from "../../shared/biometrics/BiometricsService";
 import { useNavigation } from "@react-navigation/native";
-import { TransactionController } from "../../transaction/interfaceAdapters/controllers/TransactionController";
-import { GetTransactionsUseCaseImpl } from "../../transaction/useCases/GetTransactions";
-import { ReactNativePaperTransactionPresenter } from "../../transaction/interfaceAdapters/presenters/TransactionPresenter";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../shared/navigation/NavigationTypes";
 
@@ -23,12 +20,8 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     const success = await authenticate();
     if (success) {
-      const transactionController = new TransactionController(
-        new GetTransactionsUseCaseImpl(),
-        new ReactNativePaperTransactionPresenter()
-      );
       // Navigate to the main app screen
-      navigation.replace("TransactionHistory", {transactionController});
+      navigation.replace("TransactionHistory");
     } else {
       // Biometric authentication failed
       alert("Biometric authentication failed");

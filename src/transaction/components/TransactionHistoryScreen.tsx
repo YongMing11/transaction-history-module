@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ListRenderItem, View, StyleSheet } from "react-native";
-import { TransactionController } from "../interfaceAdapters/controllers/TransactionController";
-import { List, Divider, Title, FAB } from "react-native-paper";
+import { List, Title, FAB } from "react-native-paper";
 import { Transaction } from "../entities/Transaction";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
-import { authenticate, enableBiometrics } from "../../shared/biometrics/BiometricsService";
+import { authenticate } from "../../shared/biometrics/BiometricsService";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../shared/navigation/NavigationTypes";
+import { TransactionContext } from "../context/TransactionContext";
+import { TransactionController } from "../interfaceAdapters/controllers/TransactionController";
 
-interface Props {
-  transactionController: TransactionController;
-}
-
-const TransactionHistoryScreen: React.FC<Props> = ({
-  transactionController,
-}) => {
+const TransactionHistoryScreen: React.FC = () => {
+  const  transactionController: TransactionController = useContext(TransactionContext);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [amountVisible, setAmountVisible] = useState(false);
@@ -70,7 +66,7 @@ const TransactionHistoryScreen: React.FC<Props> = ({
       description={item.description}
       right={() => (
         <Title style={[styles.transactionAmount, item.type === "credit" ? styles.creditAmount : styles.debitAmount]}>
-          {amountVisible ? (item.type === "credit" ? `+RM ` : `-RM `)+item.amount : '*****'}
+          {amountVisible ? (item.type === "credit" ? `+RM ` : `-RM `) + item.amount : '*****'}
         </Title>
       )}
       style={styles.transactionItem}
@@ -107,9 +103,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF", 
-  },
-  subheader: {
-    color: "#3498db",
   },
   transactionItem: {
     borderBottomWidth: 0.5,

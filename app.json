@@ -15,13 +15,22 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Allow $(PRODUCT_NAME) to use Face ID."
+      },
+      "bundleIdentifier": "com.yongming11.transactionhistorymodule"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ],
+      "package": "com.yongming11.transactionhistorymodule"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -32,7 +41,13 @@
         {
           "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
         }
-      ]
-    ]
+      ],
+      "sentry-expo"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f380d878-f9a5-48da-aed9-ffcc376ae195"
+      }
+    }
   }
 }
