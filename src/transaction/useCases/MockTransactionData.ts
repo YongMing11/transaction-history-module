@@ -1,4 +1,4 @@
-import { Transaction } from "../entities/Transaction";
+// This file is not used but for reference only. This mock data is used in the mock api server.
 
 export const mockTransactions: any[] = [
   { "id": 1, "amount": 100.0, "date": "2023-01-01T12:30:00Z", "description": "Groceries", "type": "debit", "merchant": "Tesco" },
