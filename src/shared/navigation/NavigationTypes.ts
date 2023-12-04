@@ -1,11 +1,11 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
-import { Transaction } from "../../transaction/entities/Transaction";
+import { TransactionDetail } from "../../transaction/entities/Transaction";
 import { TransactionController } from "../../transaction/interfaceAdapters/controllers/TransactionController";
 
 export type RootStackParamList = {
   TransactionHistory: { transactionController: TransactionController };
-  TransactionDetail: { transaction: Transaction };
+  TransactionDetail: { transactionDetail: TransactionDetail };
 };
 
 export type TransactionHistoryScreenNavigationProp = StackNavigationProp<

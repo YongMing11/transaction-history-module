@@ -14,7 +14,7 @@ type Props = {
 };
 
 const TransactionDetailScreen: React.FC<Props> = ({ route }) => {
-  const { transaction } = route.params;
+  const { transactionDetail } = route.params;
 
   return (
     <View style={styles.container}>
@@ -22,33 +22,29 @@ const TransactionDetailScreen: React.FC<Props> = ({ route }) => {
         <Title
           style={[
             styles.amount,
-            transaction.type === "credit"
+            transactionDetail.type === "credit"
               ? styles.creditAmount
               : styles.debitAmount,
           ]}
         >
-          {transaction.type === "credit" ? `+ RM ` : `- RM `}
-          {transaction.amount}
+          {transactionDetail.type === "credit" ? `+ RM ` : `- RM `}
+          {transactionDetail.amount}
         </Title>
       </View>
       <Divider style={styles.divider} />
       <View style={styles.rowContainer}>
         <Text style={styles.title}>Merchant:</Text>
-        <Text style={styles.infoText}>{transaction.merchant}</Text>
+        <Text style={styles.infoText}>{transactionDetail.merchant}</Text>
       </View>
       <View style={styles.rowContainer}>
         <Text style={styles.title}>Transaction Date:</Text>
         <Text style={styles.infoText}>
-          {new Date(transaction.date).toLocaleString()}
+          {transactionDetail.date}
         </Text>
       </View>
       <View style={styles.rowContainer}>
         <Text style={styles.title}>Description:</Text>
-        <Text style={styles.infoText}>{transaction.description}</Text>
-      </View>
-      <View style={styles.rowContainer}>
-        <Text style={styles.title}>Type:</Text>
-        <Text style={styles.infoText}>{transaction.type}</Text>
+        <Text style={styles.infoText}>{transactionDetail.description}</Text>
       </View>
     </View>
   );
@@ -69,10 +65,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   creditAmount: {
-    color: "#4CAF50", // Green color for credit
+    color: "#59cd90", // Green color for credit
   },
   debitAmount: {
-    color: "#F44336", // Red color for debit
+    color: "#ee6352", // Red color for debit
   },
   title: {
     marginRight: 8,

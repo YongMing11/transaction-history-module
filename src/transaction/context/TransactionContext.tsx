@@ -2,7 +2,7 @@
 import React, { createContext, ReactNode, useContext } from 'react';
 import { TransactionController } from '../interfaceAdapters/controllers/TransactionController';
 import { GetTransactionsUseCaseImpl } from '../useCases/GetTransactions';
-import { ReactNativePaperTransactionPresenter } from '../interfaceAdapters/presenters/TransactionPresenter';
+import { TransactionPresenterImpl } from '../interfaceAdapters/presenters/TransactionPresenter';
 
 interface TransactionContextProps {
   children: ReactNode;
@@ -13,7 +13,7 @@ export const TransactionContext = createContext<TransactionController | undefine
 export const TransactionProvider: React.FC<TransactionContextProps> = ({ children }) => {
   const transactionController = new TransactionController(
     new GetTransactionsUseCaseImpl(),
-    new ReactNativePaperTransactionPresenter()
+    new TransactionPresenterImpl()
   );
 
   return (

@@ -5,12 +5,13 @@ export interface TransactionPresenter {
   getPresentedTransactions(): Transaction[];
 }
 
-export class ReactNativePaperTransactionPresenter implements TransactionPresenter {
+export class TransactionPresenterImpl implements TransactionPresenter {
   private presentedTransactions: Transaction[] = [];
 
   present(transactions: Transaction[]): void {
+    if(!transactions) return;
     // Format and display transactions using React Native Paper components
-    transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    transactions.sort((a, b) => b.date.getTime() - a.date.getTime());
     this.presentedTransactions = transactions;
   }
 
