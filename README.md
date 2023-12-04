@@ -38,6 +38,7 @@ This repository contains the setup instructions for the Digital Bank project.
 - Expo
 - React Native Paper
 - mockapi.io
+- Sentry
 
 ## Type of Error Handling
 
