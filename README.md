@@ -30,6 +30,7 @@ This repository contains the setup instructions for the Digital Bank project.
    
 3. **Scan QR Code:**
     - Open the Expo Go app and scan the QR code displayed in the terminal.
+    - Ensure your mobile phone is connected to the same network as your running laptop
 
 ## Tech Stack
 
