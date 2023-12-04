@@ -50,7 +50,6 @@ const TransactionHistoryScreen: React.FC = () => {
     try {
       const isAuthenticated = await authenticate();
       if (isAuthenticated) {
-        console.log("Authenticated");
         setAmountVisible(!amountVisible);
       }
     } catch (error) {
