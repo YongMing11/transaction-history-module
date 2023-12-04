@@ -37,6 +37,7 @@ This repository contains the setup instructions for the Digital Bank project.
 - TypeScript
 - Expo
 - React Native Paper
+- mockapi.io
 
 ## Type of Error Handling
 
