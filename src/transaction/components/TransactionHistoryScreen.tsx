@@ -9,6 +9,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../shared/navigation/NavigationTypes";
 import { TransactionContext } from "../context/TransactionContext";
 import { TransactionController } from "../interfaceAdapters/controllers/TransactionController";
+import { formatDateToDateTimeStringWithoutYear, formatDateToFullDateTimeString, formatDateToMonthYearString } from "../../shared/formatter/dateFormatter";
 
 const TransactionHistoryScreen: React.FC = () => {
   const transactionController: TransactionController =
@@ -52,14 +53,7 @@ const TransactionHistoryScreen: React.FC = () => {
     const transactionDetail: TransactionDetail = {
       id: transaction.id,
       amount: transaction.amount,
-      date: transaction.date.toLocaleString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        hour12: true,
-      }),
+      date: formatDateToFullDateTimeString(transaction.date),
       description: transaction.description,
       merchant: transaction.merchant,
       type: transaction.type,
@@ -83,21 +77,12 @@ const TransactionHistoryScreen: React.FC = () => {
         transactions[index - 1].date.getMonth() !=
           transactions[index].date.getMonth()) && (
         <List.Subheader style={styles.subheader}>
-          {item.date.toLocaleString("en-GB", {
-            month: "short",
-            year: "numeric",
-          })}
+          {formatDateToMonthYearString(item.date)}
         </List.Subheader>
       )}
       <List.Item
         key={item.id}
-        title={item.date.toLocaleString("en-GB", {
-          day: "numeric",
-          month: "short",
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true,
-        })}
+        title={formatDateToDateTimeStringWithoutYear(item.date)}
         description={item.description}
         right={() => (
           <Title
