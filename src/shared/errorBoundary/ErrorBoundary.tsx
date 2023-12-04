@@ -2,6 +2,10 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 import * as Sentry from '@sentry/react-native';
 import { Text } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
+import { AuthenticationError } from './AuthenticationError';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/NavigationTypes';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -22,6 +26,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    // Check if the error is related to authentication
+    if (error instanceof AuthenticationError) {
+      // Handle the authentication error, e.g., navigate to the login screen
+      const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+      navigation.replace('Login');
+      return;
+    }
     // Log the error to Sentry
     Sentry.captureException(error, { extra: { errorInfo } });
   }

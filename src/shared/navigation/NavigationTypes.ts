@@ -4,6 +4,7 @@ import { TransactionDetail } from "../../transaction/entities/Transaction";
 import { TransactionController } from "../../transaction/interfaceAdapters/controllers/TransactionController";
 
 export type RootStackParamList = {
+  Login: undefined;
   TransactionHistory: { transactionController: TransactionController };
   TransactionDetail: { transactionDetail: TransactionDetail };
 };
