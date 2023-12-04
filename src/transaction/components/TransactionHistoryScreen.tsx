@@ -9,7 +9,11 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../shared/navigation/NavigationTypes";
 import { TransactionContext } from "../context/TransactionContext";
 import { TransactionController } from "../interfaceAdapters/controllers/TransactionController";
-import { formatDateToDateTimeStringWithoutYear, formatDateToFullDateTimeString, formatDateToMonthYearString } from "../../shared/formatter/dateFormatter";
+import {
+  formatDateToDateTimeStringWithoutYear,
+  formatDateToFullDateTimeString,
+  formatDateToMonthYearString,
+} from "../../shared/formatter/dateFormatter";
 
 const TransactionHistoryScreen: React.FC = () => {
   const transactionController: TransactionController =
@@ -18,6 +22,10 @@ const TransactionHistoryScreen: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [amountVisible, setAmountVisible] = useState(false);
+  const [visibleTransactions, setVisibleTransactions] = useState<Transaction[]>(
+    []
+  );
+  const [visibleIndex, setVisibleIndex] = useState(0);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const fetchTransactions = async () => {
@@ -33,6 +41,7 @@ const TransactionHistoryScreen: React.FC = () => {
 
   const handleRefresh = async () => {
     setRefreshing(true);
+    setVisibleIndex(0);
     await fetchTransactions();
     setRefreshing(false);
   };
@@ -61,9 +70,10 @@ const TransactionHistoryScreen: React.FC = () => {
     navigation.navigate("TransactionDetail", { transactionDetail });
   };
 
-  useEffect(() => {
-    fetchTransactions();
-  }, [transactionController, amountVisible]);
+  const loadMoreTransactions = () => {
+    // Implement lazy loading logic here, load the next batch of transactions as the user scrolls
+    setVisibleIndex((prev) => prev + 10);
+  };
 
   const renderItem: ListRenderItem<Transaction> = ({
     item,
@@ -104,6 +114,15 @@ const TransactionHistoryScreen: React.FC = () => {
 
   const keyExtractor = (item: Transaction) => item.id.toString();
 
+  useEffect(() => {
+    fetchTransactions();
+  }, [transactionController]);
+
+  useEffect(() => {
+    // Set visible transactions based on lazy loading logic (load 10 transactions initially)
+    setVisibleTransactions(transactions.slice(0, visibleIndex + 10));
+  }, [transactions, visibleIndex]);
+
   return (
     <View style={styles.container}>
       {loading ? ( // Show loading indicator while fetching data
@@ -113,7 +132,7 @@ const TransactionHistoryScreen: React.FC = () => {
       ) : (
         <List.Section>
           <FlatList
-            data={transactions}
+            data={visibleTransactions}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             refreshControl={
@@ -123,13 +142,20 @@ const TransactionHistoryScreen: React.FC = () => {
               />
             }
             ListFooterComponent={
-              <View style={styles.transactionListFooter}></View>
+              <View style={styles.transactionListFooter}>
+                {transactions.length > visibleIndex ? (
+                  <ActivityIndicator size="small" color="#3498db" />
+                ) : (
+                  <Text style={styles.endReachedText}>End of transactions</Text>
+                )}
+              </View>
             }
+            onEndReached={loadMoreTransactions}
+            onEndReachedThreshold={0.1}
           />
         </List.Section>
       )}
 
-      {/* Toggle Visibility Button */}
       <FAB
         style={styles.fab}
         icon={amountVisible ? "eye-off" : "eye"}
@@ -177,9 +203,14 @@ const styles = StyleSheet.create({
     marginBottom: 70,
   },
   subheader: {
-    backgroundColor: "#f0efeb", 
-    padding: 8, 
+    backgroundColor: "#f0efeb",
+    padding: 8,
     fontSize: 16,
+  },
+  endReachedText: {
+    textAlign: "center",
+    color: "#7f8c8d",
+    paddingVertical: 10,
   },
 });
 
