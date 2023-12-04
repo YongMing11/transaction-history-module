@@ -75,6 +75,14 @@ const TransactionHistoryScreen: React.FC = () => {
     setVisibleIndex((prev) => prev + 10);
   };
 
+  const shouldRenderSubheader = (index: number) => {
+    // Render subheader if it is the first transaction OR if the previous transaction is from a different month
+    return (
+      index == 0 ||
+      transactions[index - 1].date.getMonth() != transactions[index].date.getMonth()
+    );
+  }
+
   const renderItem: ListRenderItem<Transaction> = ({
     item,
     index,
@@ -83,9 +91,7 @@ const TransactionHistoryScreen: React.FC = () => {
     index: number;
   }) => (
     <>
-      {(index == 0 ||
-        transactions[index - 1].date.getMonth() !=
-          transactions[index].date.getMonth()) && (
+      {shouldRenderSubheader(index) && (
         <List.Subheader style={styles.subheader}>
           {formatDateToMonthYearString(item.date)}
         </List.Subheader>
