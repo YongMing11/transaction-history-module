@@ -12,15 +12,17 @@ const askForBiometrics = async () =>
 
 export const enableBiometrics = async (): Promise<boolean> => {
   const biometricsResult = await askForBiometrics();
-  if (biometricsResult?.success) {
-    // const keys = await RSA.generateKeys(1024);
-    // await SecureStore.setItemAsync("USER_BIOMETRIC_KEY", keys.private);
-    // await postBiometricKey({
-    //     biometricKey: {
-    //         publicKey: keys.public
-    //     }
-    // });
-  }
+
+  // For Production
+  // if (biometricsResult?.success) {
+  //   const keys = await RSA.generateKeys(1024);
+  //   await SecureStore.setItemAsync("USER_BIOMETRIC_KEY", keys.private);
+  //   await postBiometricKey({
+  //       biometricKey: {
+  //           publicKey: keys.public
+  //       }
+  //   });
+  // }
 
   return biometricsResult?.success || false;
 };
@@ -28,43 +30,46 @@ export const enableBiometrics = async (): Promise<boolean> => {
 export const authenticate = async (): Promise<boolean> => {
   const biometricsResult = await authenticateAsync({
     disableDeviceFallback: false,
-    // promptMessage: "Login with biometrics",
+    promptMessage: "Login with biometrics",
     cancelLabel: "Cancel",
   });
-  if (biometricsResult?.success) {
-    // await sendSignature();
-  }
+
+  // For Production
+  // if (biometricsResult?.success) {
+  //   const sessionToken = await sendSignature();
+  //   await SecureStore.setItemAsync("SESSION_TOKEN_KEY", sessionToken);
+  // }
 
   // Should return the status from backend server
   return biometricsResult?.success;
 };
 
-const sendSignature = async () => {
-  const signature = await generateSignature();
-  if (signature) {
-    // await postSignature({
-    //     signature
-    // });
-  }
-};
+// const sendSignature = async () => {
+//   const signature = await generateSignature();
+//   if (signature) {
+//     // await postSignature({
+//     //     signature
+//     // });
+//   }
+// };
 
-const generateSignature = async () => {
-  const biometrics = await SecureStore.getItemAsync("USER_BIOMETRIC_KEY");
-  const payload = {
-    exp: dayjs().add(5, "minutes").unix(),
-  };
+// const generateSignature = async () => {
+//   const biometrics = await SecureStore.getItemAsync("USER_BIOMETRIC_KEY");
+//   const payload = {
+//     exp: dayjs().add(5, "minutes").unix(),
+//   };
 
-  if (biometrics) {
-    const signature = await sign(biometrics, payload);
-    return signature;
-  }
-};
+//   if (biometrics) {
+//     const signature = await sign(biometrics, payload);
+//     return signature;
+//   }
+// };
 
-async function sign(privateKey: string, payload: any) {
-  const signature = await RSA.signWithAlgorithm(
-    payload,
-    privateKey,
-    "SHA256withRSA"
-  );
-  return signature;
-}
+// async function sign(privateKey: string, payload: any) {
+//   const signature = await RSA.signWithAlgorithm(
+//     payload,
+//     privateKey,
+//     "SHA256withRSA"
+//   );
+//   return signature;
+// }
