@@ -2,7 +2,7 @@
 
 ## Description
 
-This repository contains the setup instructions for the Digital Bank project.
+This repository contains the setup instructions for the Digital Bank project (Frontend).
 
 1. **Clone the Repository:**
     ```bash
@@ -49,6 +49,11 @@ This repository contains the setup instructions for the Digital Bank project.
 4. Navigation
 5. Server side
 
+## Note
+
+- While the project has been optimized and tested for optimal performance on Android devices, iOS users may encounter a limitation related to Expo LocalAuthentication. Specifically, there might be an issue with the automatic prompting of biometric authentication (Face ID) on iOS devices. As an alternative, users can utilize the passcode authentication method in such situations.
+- The implementation of RSA key generation and storage, crucial for biometric authentication, is currently commented out in the code for demonstration purposes. In a production environment, it is highly recommended to implement this section to enhance security. This ensures the proper generation and secure storage of RSA keys for biometric authentication.
+
 ## References
 
 1. **Clean Architecture:**
@@ -60,3 +65,4 @@ This repository contains the setup instructions for the Digital Bank project.
     - [React Native Paper](https://reactnativepaper.com/)
 4. **Biometric:**
     - [Dev.to Article](https://dev.to/allanloji/setting-up-biometric-login-on-your-react-native-app-4903)
+    - [Expo LocalAuthentication](https://docs.expo.dev/versions/latest/sdk/local-authentication/)
